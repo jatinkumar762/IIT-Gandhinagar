@@ -20,8 +20,8 @@ public class ServerApp extends JFrame {
 			 	ServerRes.win=new ServerWin();
 	          	Toolkit tool=Toolkit.getDefaultToolkit();
 	          	Dimension size=tool.getScreenSize();
-	         	final int WIDTH=600;
-	         	final int HEIGHT=600;
+	         	final int WIDTH=400;
+	         	final int HEIGHT=400;
 	         	ServerRes.win.setBounds(size.width/2-WIDTH/2,size.height/2-HEIGHT/2,WIDTH,HEIGHT);
 	         	ServerRes.win.setResizable(false);
 	         	ServerRes.win.setTitle("Server Window");
