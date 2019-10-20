@@ -27,14 +27,23 @@ public class ServerApp extends JFrame {
 	         	ServerRes.win.setTitle("Server Window");
 	         	ServerRes.win.setVisible(true);
 	         	
-			  while(true)
-	          {
-		           System.out.println("Waiting for client...");
-		           Socket client=ss.accept();
-		           System.out.println("Client Connected Successfully");
-		           //invokes thread
-		           new ClientThread(client);
-	          }			  
+	         	File file = new File("Server\\User_Details.txt");
+	         	
+	         	if(file.getParentFile().mkdir()) {
+		         	if(file.createNewFile())
+		         		System.out.println("Success!");
+		            else 
+		            	System.out.println ("Error, file already exists.");
+	         	}
+		         		         	
+				  while(true)
+		          {
+			           System.out.println("Waiting for client...");
+			           Socket client=ss.accept();
+			           System.out.println("Client Connected Successfully");
+			           //invokes thread
+			           new ClientThread(client);
+		          }			  
 		}
 		catch(Exception ex){
 			  JOptionPane.showMessageDialog(this,ex.getMessage(),"Server App",JOptionPane.ERROR_MESSAGE);
