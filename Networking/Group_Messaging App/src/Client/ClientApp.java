@@ -21,12 +21,12 @@ public class ClientApp extends JFrame implements ActionListener{
 	 JLabel logas;
 	 JButton enterbtn;
 	 
-	public ClientApp() {
-		// TODO Auto-generated constructor stub
-		
+	public ClientApp() 
+	{
+		// TODO Auto-generated constructor stub	
 		try {
 			
-			Socket s=new Socket("localhost",6666);  
+			ClientRes.client=new Socket("localhost",6666);  
 			System.out.println("Conected to Server");
 			
 	        Toolkit tool=Toolkit.getDefaultToolkit();
@@ -61,7 +61,7 @@ public class ClientApp extends JFrame implements ActionListener{
             up.setBounds(130,60,100,25);
             enterbtn.setBounds(70,100,100,25);     
             
-			s.close();
+            ClientRes.client.close();
 		}
 		catch(Exception ex){
 			  JOptionPane.showMessageDialog(this,"Unable to connect to server","Client App",JOptionPane.ERROR_MESSAGE);
@@ -88,7 +88,8 @@ public class ClientApp extends JFrame implements ActionListener{
 	        win.setBounds(size.width/2-WIDTH/2,size.height/2-HEIGHT/2,WIDTH,HEIGHT);
 	        win.setResizable(false);
 	        win.setTitle("Login Window");
-	        win.setVisible(true);
+	        win.setVisible(true);	        
+	        this.dispose(); 
 	        
 		}catch(Exception ex){
 			
