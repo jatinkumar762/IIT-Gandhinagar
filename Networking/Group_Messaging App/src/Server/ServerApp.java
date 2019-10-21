@@ -27,7 +27,7 @@ public class ServerApp extends JFrame {
 	         	ServerRes.win.setTitle("Server Window");
 	         	ServerRes.win.setVisible(true);
 	         	
-	         	File file = new File("Server\\User_Details.txt");
+	         	File file = new File("Server_Data\\User_Details.txt");
 	         	
 	         	if(file.getParentFile().mkdir()) {
 		         	if(file.createNewFile())
