@@ -61,7 +61,6 @@ public class ClientApp extends JFrame implements ActionListener{
             up.setBounds(130,60,100,25);
             enterbtn.setBounds(70,100,100,25);     
             
-            ClientRes.client.close();
 		}
 		catch(Exception ex){
 			  JOptionPane.showMessageDialog(this,"Unable to connect to server","Client App",JOptionPane.ERROR_MESSAGE);
