@@ -86,40 +86,42 @@ public class LoginWin extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent ae)
     {
 		try {
-			
-		 ObjectOutputStream out=new ObjectOutputStream(ClientRes.client.getOutputStream());     
-         ObjectInputStream in=new ObjectInputStream(ClientRes.client.getInputStream());
-         
+			      
 	      if(ae.getSource().equals(SignUpbtn)) {
 	    	  
+	    	 ObjectOutputStream out=new ObjectOutputStream(ClientRes.client.getOutputStream());              
 	         out.writeObject("NewUser");
 	         out.writeObject(this.logid.getText().trim());
-	         out.writeObject(new String(this.pwd.getPassword()).trim());	                  
+	         out.writeObject(new String(this.pwd.getPassword()).trim());
+	         
+	         ObjectInputStream in=new ObjectInputStream(ClientRes.client.getInputStream());
 	         String resp=in.readObject().toString();
 	         
 	         JOptionPane.showMessageDialog(this,resp,"User Registration",JOptionPane.INFORMATION_MESSAGE);  
-	         ClientRes.logid = this.logid.toString();
-	        
-	        		 
-	      }else {    	
+	         ClientRes.logid = this.logid.toString();       
+	         this.dispose();
+	         new ClientWin();
+	                		 
+	      }else {  
+	    	  
+	    	 ObjectOutputStream out=new ObjectOutputStream(ClientRes.client.getOutputStream());          
 	    	 out.writeObject("LoginD");
 	         out.writeObject(this.logid.getText().trim());
-	         out.writeObject(new String(this.pwd.getPassword()).trim());      
+	         out.writeObject(new String(this.pwd.getPassword()).trim());     
+	         
+	         ObjectInputStream in=new ObjectInputStream(ClientRes.client.getInputStream());
 	         String resp=in.readObject().toString();         
 	         ClientRes.logid = this.logid.toString();
-	         
-	         
-	         
-	         
-	         
+	         	
+	         JOptionPane.showMessageDialog(this,resp,"User Signin",JOptionPane.INFORMATION_MESSAGE);         
+	         this.dispose();
+	         new ClientWin();
 	      }
 	      
-	      	      
-	      
-	      
+	      	     	      
 		}
 		catch(Exception ex){
-			
+			ex.printStackTrace();
 		}
     }
 }
