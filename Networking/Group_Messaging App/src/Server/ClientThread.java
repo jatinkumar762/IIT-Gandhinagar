@@ -30,13 +30,14 @@ public class ClientThread extends Thread{
 		          ObjectInputStream in=new ObjectInputStream(this.client.getInputStream());
 		          String req=in.readObject().toString();
 	          
-		          if(req.equals("NewUser")) {
+		          if(req.equals("NewUser"))
+		          {
 		        	  
 		        	  this.logid = in.readObject().toString();
 		        	  this.pwd = in.readObject().toString();
 		        	  this.loginTime=new java.util.Date().toString();
 		        	  
-		        	    BufferedReader br = new BufferedReader(new FileReader("Server\\User_Details.txt"));
+		        	    BufferedReader br = new BufferedReader(new FileReader("Server_Data\\User_Details.txt"));
 		        	    String line;
 		        	    while ((line = br.readLine()) != null) {
 		        	       // process the line.
@@ -49,7 +50,7 @@ public class ClientThread extends Thread{
 		        	  if(line!=null) {
 		        		  out.writeObject("User Already Exist");  
 		        	  }else {
-			        	  Fout = new FileWriter("Server\\User_Details.txt");
+			        	  Fout = new FileWriter("Server_Data\\User_Details.txt");
 			        	  Fout.write(logid+"="+pwd+"\n");
 			        	  Fout.flush();
 			        	  Fout.close();		        	  
@@ -62,17 +63,15 @@ public class ClientThread extends Thread{
 		        	    this.pwd = in.readObject().toString();
 		        	    this.loginTime=new java.util.Date().toString();
 		        		
-		        	    BufferedReader br = new BufferedReader(new FileReader("Server\\User_Details.txt"));
+		        	    BufferedReader br = new BufferedReader(new FileReader("Server_Data\\User_Details.txt"));
 		        	    String line;
 		        	    boolean flag = false;
 		        	    while ((line = br.readLine()) != null) {
 		        	       // process the line.
 		        	    	String[] arr = line.split("=");
-		        	    	if(arr[0].equals(logid))
-		        	    		if(arr[1].equals(pwd)) {
-		        	    			flag=true;
-		        	    			break;
-		        	    		}else break;
+		        	    	if(arr[0].equals(logid) && arr[1].equals(pwd)) {
+		        	    		flag=true; break;
+		        	    	}else break;
 		        	    }
 		        	    ObjectOutputStream out=new ObjectOutputStream(this.client.getOutputStream());
 		        	    if(flag) {
