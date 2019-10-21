@@ -34,11 +34,27 @@ public class ClientThread extends Thread{
 		        	  
 		        	  this.logid = in.readObject().toString();
 		        	  this.pwd = in.readObject().toString();
-		        	  this.loginTime=new java.util.Date().toString();	        	  
-		        	  Fout = new FileWriter("Server\\User_Details.txt");
-		        	  Fout.write(logid+"="+pwd);
-		        	  ObjectOutputStream out=new ObjectOutputStream(this.client.getOutputStream());
-		        	  out.writeObject("Successfully Created");        	 	        	  
+		        	  this.loginTime=new java.util.Date().toString();
+		        	  
+		        	    BufferedReader br = new BufferedReader(new FileReader("Server\\User_Details.txt"));
+		        	    String line;
+		        	    while ((line = br.readLine()) != null) {
+		        	       // process the line.
+		        	    	String[] arr = line.split("=");
+		        	    	if(arr[0].equals(logid))
+		        	    	   break;
+		        	    }
+		        	    
+		        	  ObjectOutputStream out=new ObjectOutputStream(this.client.getOutputStream()); 
+		        	  if(line!=null) {
+		        		  out.writeObject("User Already Exist");  
+		        	  }else {
+			        	  Fout = new FileWriter("Server\\User_Details.txt");
+			        	  Fout.write(logid+"="+pwd+"\n");
+			        	  Fout.flush();
+			        	  Fout.close();		        	  
+			        	  out.writeObject("Successfully Created");   
+		        	  }
 		          }
 		          else if(req.equals("LoginD")) {
 		        	  
@@ -46,23 +62,33 @@ public class ClientThread extends Thread{
 		        	    this.pwd = in.readObject().toString();
 		        	    this.loginTime=new java.util.Date().toString();
 		        		
-		        	    Properties p = new Properties();
-		        	    p.load(new FileInputStream("Server\\User_Details.txt"));
-		        	    
-		        	    ObjectOutputStream out=new ObjectOutputStream(this.client.getOutputStream());
-		        	    
-		        	    if(p.getProperty(logid).equals("pwd")) {
-		        	    	 out.writeObject("Successfully Created"); 
-		        	    }else {
-		        	    	out.writeObject("User Doesn't Exist"); 
+		        	    BufferedReader br = new BufferedReader(new FileReader("Server\\User_Details.txt"));
+		        	    String line;
+		        	    boolean flag = false;
+		        	    while ((line = br.readLine()) != null) {
+		        	       // process the line.
+		        	    	String[] arr = line.split("=");
+		        	    	if(arr[0].equals(logid))
+		        	    		if(arr[1].equals(pwd)) {
+		        	    			flag=true;
+		        	    			break;
+		        	    		}else break;
 		        	    }
-	        	            	       	  
+		        	    ObjectOutputStream out=new ObjectOutputStream(this.client.getOutputStream());
+		        	    if(flag) {
+		        	    	 out.writeObject("Successfully Loggedin"); 
+		        	    }else {
+		        	    	if(line!=null)
+		        	    		out.writeObject("Wrong Password"); 
+		        	    	else
+		        	    		out.writeObject("User Doesn't Exist"); 
+		        	    }       	       	  
 		          }          
 	                    
 	         }
 	         
 	       }catch(Exception ex) {
-	    	   
+	    	   //ex.printStackTrace();
 	       }
 	 }
 }
