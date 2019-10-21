@@ -34,6 +34,11 @@ public class ServerApp extends JFrame {
 		         		System.out.println("Success!");
 		            else 
 		            	System.out.println ("Error, file already exists.");
+	         	}else {
+	         		if(file.createNewFile())
+		         		System.out.println("Success!");
+		            else 
+		            	System.out.println ("Error, file already exists.");
 	         	}
 		         		         	
 				  while(true)
