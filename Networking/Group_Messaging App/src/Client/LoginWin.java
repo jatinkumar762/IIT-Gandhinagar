@@ -98,9 +98,9 @@ public class LoginWin extends JFrame implements ActionListener {
 	         String resp=in.readObject().toString();
 	         
 	         JOptionPane.showMessageDialog(this,resp,"User Registration",JOptionPane.INFORMATION_MESSAGE);  
-	         ClientRes.logid = this.logid.toString();       
+	         ClientRes.logid = this.logid.getText().trim();       
 	         this.dispose();
-	         new ClientWin();
+	         new ClientWin(ClientRes.logid);
 	                		 
 	      }else {  
 	    	  
@@ -111,14 +111,13 @@ public class LoginWin extends JFrame implements ActionListener {
 	         
 	         ObjectInputStream in=new ObjectInputStream(ClientRes.client.getInputStream());
 	         String resp=in.readObject().toString();         
-	         ClientRes.logid = this.logid.toString();
+	         ClientRes.logid = this.logid.getText().trim();
 	         	
 	         JOptionPane.showMessageDialog(this,resp,"User Signin",JOptionPane.INFORMATION_MESSAGE);         
 	         this.dispose();
-	         new ClientWin();
+	         new ClientWin(ClientRes.logid);
 	      }
-	      
-	      	     	      
+	          	     	      
 		}
 		catch(Exception ex){
 			ex.printStackTrace();
