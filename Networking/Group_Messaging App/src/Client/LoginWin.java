@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Map;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -96,11 +97,12 @@ public class LoginWin extends JFrame implements ActionListener {
 	         
 	         ObjectInputStream in=new ObjectInputStream(ClientRes.client.getInputStream());
 	         String resp=in.readObject().toString();
+	         ClientRes.gpM=(Map)in.readObject();
 	         
 	         JOptionPane.showMessageDialog(this,resp,"User Registration",JOptionPane.INFORMATION_MESSAGE);  
 	         ClientRes.logid = this.logid.getText().trim();       
 	         this.dispose();
-	         new ClientWin(ClientRes.logid);
+	         ClientRes.cWin = new ClientWin(ClientRes.logid);
 	                		 
 	      }else {  
 	    	  
@@ -110,12 +112,13 @@ public class LoginWin extends JFrame implements ActionListener {
 	         out.writeObject(new String(this.pwd.getPassword()).trim());     
 	         
 	         ObjectInputStream in=new ObjectInputStream(ClientRes.client.getInputStream());
-	         String resp=in.readObject().toString();         
+	         String resp=in.readObject().toString();    
+	         ClientRes.gpM=(Map)in.readObject();
 	         ClientRes.logid = this.logid.getText().trim();
 	         	
 	         JOptionPane.showMessageDialog(this,resp,"User Signin",JOptionPane.INFORMATION_MESSAGE);         
 	         this.dispose();
-	         new ClientWin(ClientRes.logid);
+	         ClientRes.cWin = new ClientWin(ClientRes.logid);
 	      }
 	          	     	      
 		}
