@@ -18,10 +18,11 @@ public class InputWin extends JFrame implements ActionListener{
 	JLabel input;
 	JTextField name;
 	JButton okbtn;
-	String groupName;
+	String groupName,activity;
 	
-	public InputWin() {
+	public InputWin(String activity) {
 		
+		this.activity=activity;
 		// TODO Auto-generated constructor stub
 		Toolkit tool=Toolkit.getDefaultToolkit();
       	Dimension size=tool.getScreenSize();
@@ -58,16 +59,35 @@ public class InputWin extends JFrame implements ActionListener{
 			if(!name.getText().toString().trim().equals(""))
 			{
 				groupName = name.getText().toString().trim();
-		    	ObjectOutputStream out=new ObjectOutputStream(ClientRes.client.getOutputStream());  
-		    	out.writeObject("Create Group");
-		    	out.writeObject(groupName);
-		    	
-		    	ObjectInputStream in=new ObjectInputStream(ClientRes.client.getInputStream());  		    	
-		    	JOptionPane.showMessageDialog(this,in.readObject().toString(),"Group Creation",JOptionPane.INFORMATION_MESSAGE); 
+				
+				if(activity.equals("Create")) {
+			    	ObjectOutputStream out=new ObjectOutputStream(ClientRes.client.getOutputStream());  
+			    	out.writeObject("Create Group");
+			    	out.writeObject(groupName);
+			    	
+			    	ObjectInputStream in=new ObjectInputStream(ClientRes.client.getInputStream());  		    	
+			    	JOptionPane.showMessageDialog(this,in.readObject().toString(),"Group Creation",JOptionPane.INFORMATION_MESSAGE); 
+				}
+				else if(activity.equals("Join")) {
+					ObjectOutputStream out=new ObjectOutputStream(ClientRes.client.getOutputStream());  
+			    	out.writeObject("Join Group");
+			    	out.writeObject(groupName);
+			    	
+			    	
+			    	
+				}
+				else if(activity.equals("Leave")) {
+					ObjectOutputStream out=new ObjectOutputStream(ClientRes.client.getOutputStream());  
+			    	out.writeObject("Leave Group");
+			    	out.writeObject(groupName);
+			    	
+			    	
+			    	
+				}
 		    	this.dispose();
 			}
 			else
-			JOptionPane.showMessageDialog(this,"Enter Name First","Group Operation",JOptionPane.INFORMATION_MESSAGE); 
+			JOptionPane.showMessageDialog(this,"Enter Name First","Group Operation",JOptionPane.ERROR_MESSAGE); 
 		}
 		catch(Exception ex)
 		{
