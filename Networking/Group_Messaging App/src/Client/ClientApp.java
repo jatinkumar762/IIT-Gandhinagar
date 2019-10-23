@@ -80,6 +80,7 @@ public class ClientApp extends JFrame implements ActionListener{
 	            type="signup";
 	         
 			LoginWin win=new LoginWin(type);
+			ClientRes.lWin = win;
 			Toolkit tool=Toolkit.getDefaultToolkit(); 
 			Dimension size=tool.getScreenSize();
 	        final int WIDTH=400;
@@ -98,8 +99,7 @@ public class ClientApp extends JFrame implements ActionListener{
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		ClientApp  ClientObj = new ClientApp();	
-		
+		ClientRes.cApp  = new ClientApp();	
 	}
 
 }
