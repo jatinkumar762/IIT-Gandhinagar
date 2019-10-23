@@ -17,7 +17,8 @@ public class ServerApp extends JFrame {
 		try {	
 			    ServerSocket ss=new ServerSocket(6666); 
 			    System.out.println("Server Started.......");
-			 	ServerRes.win=new ServerWin();
+			    
+			 	ServerRes.win=new ServerWin();			 	
 	          	Toolkit tool=Toolkit.getDefaultToolkit();
 	          	Dimension size=tool.getScreenSize();
 	         	final int WIDTH=400;
