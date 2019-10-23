@@ -87,24 +87,18 @@ public class GroupWin extends JPanel implements ActionListener {
 		try {
 			
 		    if(create_btn.isSelected()) {
-		    	iw = new InputWin();
-//		    	if(!iw.groupName.equals("")) {
-//			    	ObjectOutputStream out=new ObjectOutputStream(ClientRes.client.getOutputStream());  
-//			    	out.writeObject("Create Group");
-//			    	out.writeObject(iw.groupName);
-//		    	}
+		    	iw = new InputWin("Create");
 		    }
 		    else if(enter_btn.isSelected()) {
 				fw = new FileWin();
 				ClientRes.cWin.jtb.addTab("File",fw);
 		    }
 		    else if(join_btn.isSelected()) {
-		    	iw = new InputWin();
-		    	//
+		    	iw = new InputWin("Join");
 		    	
 		    }
 		    else if(leave_btn.isSelected()) {
-		    	iw = new InputWin();
+		    	iw = new InputWin("Leave");
 		    }
 			
 		}
