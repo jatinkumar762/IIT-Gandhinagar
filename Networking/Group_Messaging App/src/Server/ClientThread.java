@@ -126,7 +126,7 @@ public class ClientThread extends Thread{
 		        	    	String[] arr = line.split("=");
 		        	    	if(arr[0].equals(logid) && arr[1].equals(pwd)) {
 		        	    		flag=true; break;
-		        	    	}else break;
+		        	    	}
 		        	    }
 		        	    ObjectOutputStream out=new ObjectOutputStream(this.client.getOutputStream());
 		        	    if(flag) {
