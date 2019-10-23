@@ -1,6 +1,9 @@
 package Client;
 
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.ObjectOutputStream;
+import java.util.Map;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -10,7 +13,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
-public class GroupWin extends JPanel{
+public class GroupWin extends JPanel implements ActionListener {
 
 	JLabel choicelbl,tbllbl;
 	JRadioButton create_btn,enter_btn,join_btn,leave_btn;
@@ -18,6 +21,8 @@ public class GroupWin extends JPanel{
 	JButton enter;
 	JTable gpTable;
 	JScrollPane sp;
+	FileWin fw;
+	InputWin iw;
 	
 	public GroupWin() {
 		// TODO Auto-generated constructor stub
@@ -25,16 +30,16 @@ public class GroupWin extends JPanel{
 		this.setLayout(null);
 		
         String[] columnNames = { "Group Name", "Member" }; 
-        String[][] data = { 
-                { "NLP", "YES" }, 
-                { "OS", "NO"} 
-            };
-        
+        String[][] data = new String[ClientRes.gpM.size()][2];
+        int i=0;
+        //read group membership
+        for(Map.Entry m:ClientRes.gpM.entrySet()){  
+        	data[i][0]=m.getKey().toString();
+        	data[i][1]=m.getValue().toString(); 
+        	i++;
+         } 
+              
         gpTable = new JTable(data,columnNames);	   	      
-       
-//        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-//        centerRenderer.setHorizontalAlignment( JLabel.CENTER );
-//        gpTable.setDefaultRenderer(String.class, centerRenderer);
         
         this.add(gpTable);
         sp = new JScrollPane(gpTable,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
@@ -72,6 +77,40 @@ public class GroupWin extends JPanel{
         enter.setBounds(70,170,100,25); 
         tbllbl.setBounds(250, 10, 200, 25);
         sp.setBounds(250, 40, 250, 200);
+        
+        enter.addActionListener(this);
 	}
 
+	public void actionPerformed(ActionEvent ae)
+    {
+		// TODO Auto-generated method stub
+		try {
+			
+		    if(create_btn.isSelected()) {
+		    	iw = new InputWin();
+//		    	if(!iw.groupName.equals("")) {
+//			    	ObjectOutputStream out=new ObjectOutputStream(ClientRes.client.getOutputStream());  
+//			    	out.writeObject("Create Group");
+//			    	out.writeObject(iw.groupName);
+//		    	}
+		    }
+		    else if(enter_btn.isSelected()) {
+				fw = new FileWin();
+				ClientRes.cWin.jtb.addTab("File",fw);
+		    }
+		    else if(join_btn.isSelected()) {
+		    	iw = new InputWin();
+		    	//
+		    	
+		    }
+		    else if(leave_btn.isSelected()) {
+		    	iw = new InputWin();
+		    }
+			
+		}
+		catch(Exception ex)
+		{
+		     	ex.printStackTrace();
+		}
+	}	
 }
