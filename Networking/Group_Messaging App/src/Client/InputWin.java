@@ -73,7 +73,8 @@ public class InputWin extends JFrame implements ActionListener{
 			    	out.writeObject("Join Group");
 			    	out.writeObject(groupName);
 			    	
-			    	
+			    	ObjectInputStream in=new ObjectInputStream(ClientRes.client.getInputStream());  		    	
+			    	JOptionPane.showMessageDialog(this,in.readObject().toString(),"Group Creation",JOptionPane.INFORMATION_MESSAGE); 
 			    	
 				}
 				else if(activity.equals("Leave")) {
@@ -81,8 +82,13 @@ public class InputWin extends JFrame implements ActionListener{
 			    	out.writeObject("Leave Group");
 			    	out.writeObject(groupName);
 			    	
+			    	ObjectInputStream in=new ObjectInputStream(ClientRes.client.getInputStream());  		    	
+			    	JOptionPane.showMessageDialog(this,in.readObject().toString(),"Group Creation",JOptionPane.INFORMATION_MESSAGE); 
 			    	
-			    	
+				}
+				else if(activity.equals("Enter")) {				 
+					FileWin fw = new FileWin();
+					ClientRes.cWin.jtb.addTab(groupName,fw);
 				}
 		    	this.dispose();
 			}
