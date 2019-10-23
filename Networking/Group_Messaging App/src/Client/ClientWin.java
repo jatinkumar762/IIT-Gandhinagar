@@ -22,7 +22,7 @@ public class ClientWin extends JFrame {
 
 	JTabbedPane jtb;
 	GroupWin gw;
-	
+//	FileWin fw;
 	public ClientWin(String user)
 	{
 		try {	
@@ -36,7 +36,8 @@ public class ClientWin extends JFrame {
 		     	this.setTitle("User - "+user);
 		     	this.setVisible(true);
 		     	this.setLayout(null);
-		     	
+		     	this.setDefaultCloseOperation(this.EXIT_ON_CLOSE);
+
 		     	gw=new GroupWin();
 		     	
 		     	jtb=new JTabbedPane();
