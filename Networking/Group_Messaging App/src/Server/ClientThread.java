@@ -4,6 +4,8 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
+import Client.ClientRes;
+
 public class ClientThread extends Thread{
 
 	  private Socket client;
@@ -52,7 +54,7 @@ public class ClientThread extends Thread{
 		File[] listOfFiles = folder.listFiles();
 		for (File file : listOfFiles) 
 		{
-			if (file.isDirectory()&&file.getName().split("_")[0].equals("GP")&&file.getName().split("_")[0].equals(gpName)) 
+			if (file.isDirectory()&&file.getName().equals("GP_"+gpName)) 
 				return false;
 		}
 		File file = new File("Server_Data\\GP_"+gpName+"\\Member_Details.txt");
@@ -101,7 +103,7 @@ public class ClientThread extends Thread{
 		        	  if(line!=null) {
 		        		  out.writeObject("User Already Exist");  
 		        	  }else {
-			        	  Fout = new FileWriter("Server_Data\\User_Details.txt");
+			        	  Fout = new FileWriter("Server_Data\\User_Details.txt",true);
 			        	  Fout.write(logid+"="+pwd+"\n");
 			        	  Fout.flush();
 			        	  Fout.close();		
@@ -139,18 +141,72 @@ public class ClientThread extends Thread{
 		        	    }       	       	  
 		          } 
 		          else if(req.equals("Create Group")) {
+		        	  
 		        	  String gpName=in.readObject().toString();
 		        	  ObjectOutputStream out=new ObjectOutputStream(this.client.getOutputStream());
 		        	  if(CreateGroup(gpName))
 		        		  out.writeObject("Successfully Created"); 
 		        	  else
 		        		  out.writeObject("Group Already Exist"); 
+		        	  
+		          }
+		          else if(req.equals("Join Group")) {
+		        	  
+		        	  String gpName=in.readObject().toString();
+		        	  BufferedReader br = new BufferedReader(new FileReader("Server_Data\\GP_"+ gpName +"\\Member_Details.txt"));
+		        	  String line;
+		        	  while ((line = br.readLine()) != null) {
+		        	       // process the line.
+		        	    	if(line.equals(ClientRes.logid))
+		        	    		 break;
+		        	  }
+		        	  ObjectOutputStream out=new ObjectOutputStream(this.client.getOutputStream());
+		        	  if(line!=null)
+		        		  out.writeObject("User Already Member"); 
+		        	  else {
+		        		  Fout = new FileWriter("Server_Data\\GP_"+ gpName +"\\Member_Details.txt",true);
+			        	  Fout.write(logid+"\n");
+			        	  Fout.flush();
+			        	  Fout.close();
+			        	  out.writeObject("User Added Sucessfully"); 
+		        	  }
+		        	  		        	  
+		          }
+		          else if(req.equals("Leave Group")) {
+  	          	  
+  		        	  Vector<String> members=new Vector<String>();
+  		        	  String gpName=in.readObject().toString();
+		        	  BufferedReader br = new BufferedReader(new FileReader("Server_Data\\GP_"+ gpName +"\\Member_Details.txt"));
+		        	  String line;
+		        	  Boolean flag= false;
+		        	  while ((line = br.readLine()) != null) {
+		        		  if(line.equals(ClientRes.logid))
+		        			  flag=true;
+		        	       members.addElement(line);
+		        	  }
+		        	  if(flag) {
+			        	  Fout = new FileWriter("Server_Data\\GP_"+ gpName +"\\Member_Details.txt");
+			        	  Fout.write("");
+			        	  Fout.close();
+			        	  Fout = new FileWriter("Server_Data\\GP_"+ gpName +"\\Member_Details.txt",true);
+			        	  for(int i=0;i<members.size();i++)
+			        		  Fout.write(members.get(i).toString());
+			        	  Fout.close();
+			        	  members = null;
+			        	  ObjectOutputStream out=new ObjectOutputStream(this.client.getOutputStream());
+			        	  out.writeObject("User Removed Sucessfully"); 
+		        	  }else {
+		        		  ObjectOutputStream out=new ObjectOutputStream(this.client.getOutputStream());
+			        	  out.writeObject("Already not member"); 
+		        	  }
+		        	  
+		        	  
 		          }
 	                    
 	         }
 	         
 	       }catch(Exception ex) {
-	    	   //ex.printStackTrace();
+	    	  
 	       }
 	 }
 }
