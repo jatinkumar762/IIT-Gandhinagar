@@ -18,15 +18,15 @@ public class ServerApp extends JFrame {
 			    ServerSocket ss=new ServerSocket(6666); 
 			    System.out.println("Server Started.......");
 			    
-			 	ServerRes.win=new ServerWin();			 	
-	          	Toolkit tool=Toolkit.getDefaultToolkit();
-	          	Dimension size=tool.getScreenSize();
-	         	final int WIDTH=400;
-	         	final int HEIGHT=400;
-	         	ServerRes.win.setBounds(size.width/2-WIDTH/2,size.height/2-HEIGHT/2,WIDTH,HEIGHT);
-	         	ServerRes.win.setResizable(false);
-	         	ServerRes.win.setTitle("Server Window");
-	         	ServerRes.win.setVisible(true);
+//			 	ServerRes.win=new ServerWin();			 	
+//	          	Toolkit tool=Toolkit.getDefaultToolkit();
+//	          	Dimension size=tool.getScreenSize();
+//	         	final int WIDTH=400;
+//	         	final int HEIGHT=400;
+//	         	ServerRes.win.setBounds(size.width/2-WIDTH/2,size.height/2-HEIGHT/2,WIDTH,HEIGHT);
+//	         	ServerRes.win.setResizable(false);
+//	         	ServerRes.win.setTitle("Server Window");
+//	         	ServerRes.win.setVisible(true);
 	         	
 	         	File file = new File("Server_Data\\User_Details.txt");
 	         	
@@ -60,7 +60,7 @@ public class ServerApp extends JFrame {
 	public static void main(String[] args) 
 	{
 		// TODO Auto-generated method stub
-		ServerApp  ServerObj = new ServerApp();	
+		new ServerApp();	
 	}
 
 }
