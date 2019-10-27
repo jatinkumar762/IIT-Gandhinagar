@@ -20,7 +20,8 @@ public class InputWin extends JFrame implements ActionListener{
 	JButton okbtn;
 	String groupName,activity;
 	
-	public InputWin(String activity) {
+	public InputWin(String activity) 
+	{
 		
 		this.activity=activity;
 		// TODO Auto-generated constructor stub
@@ -52,7 +53,8 @@ public class InputWin extends JFrame implements ActionListener{
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent e) {
+	public void actionPerformed(ActionEvent e)
+    {
 		// TODO Auto-generated method stub
 		try {
 			
@@ -60,35 +62,30 @@ public class InputWin extends JFrame implements ActionListener{
 			{
 				groupName = name.getText().toString().trim();
 				
-				if(activity.equals("Create")) {
+				if(activity.equals("Create")) {  
 			    	ObjectOutputStream out=new ObjectOutputStream(ClientRes.client.getOutputStream());  
 			    	out.writeObject("Create Group");
 			    	out.writeObject(groupName);
-			    	
-			    	ObjectInputStream in=new ObjectInputStream(ClientRes.client.getInputStream());  		    	
-			    	JOptionPane.showMessageDialog(this,in.readObject().toString(),"Group Creation",JOptionPane.INFORMATION_MESSAGE); 
+			     
 				}
 				else if(activity.equals("Join")) {
 					ObjectOutputStream out=new ObjectOutputStream(ClientRes.client.getOutputStream());  
 			    	out.writeObject("Join Group");
 			    	out.writeObject(groupName);
 			    	
-			    	ObjectInputStream in=new ObjectInputStream(ClientRes.client.getInputStream());  		    	
-			    	JOptionPane.showMessageDialog(this,in.readObject().toString(),"Group Creation",JOptionPane.INFORMATION_MESSAGE); 
-			    	
 				}
 				else if(activity.equals("Leave")) {
 					ObjectOutputStream out=new ObjectOutputStream(ClientRes.client.getOutputStream());  
 			    	out.writeObject("Leave Group");
 			    	out.writeObject(groupName);
-			    	
-			    	ObjectInputStream in=new ObjectInputStream(ClientRes.client.getInputStream());  		    	
-			    	JOptionPane.showMessageDialog(this,in.readObject().toString(),"Group Creation",JOptionPane.INFORMATION_MESSAGE); 
-			    	
+			    				    	
 				}
-				else if(activity.equals("Enter")) {				 
-					FileWin fw = new FileWin();
-					ClientRes.cWin.jtb.addTab(groupName,fw);
+				else if(activity.equals("Enter")) {	
+					
+					ObjectOutputStream out=new ObjectOutputStream(ClientRes.client.getOutputStream());  
+			    	out.writeObject("Enter Group");
+			    	out.writeObject(groupName);
+			    	
 				}
 		    	this.dispose();
 			}
