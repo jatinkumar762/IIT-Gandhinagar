@@ -22,11 +22,13 @@ public class ClientWin extends JFrame {
 
 	JTabbedPane jtb;
 	GroupWin gw;
-//	FileWin fw;
+	FileWin fw;
 	public ClientWin(String user)
 	{
 		try {	
 				//TODO Auto-generated constructor stub
+			 	this.setDefaultCloseOperation(this.EXIT_ON_CLOSE);
+			 	
 				Toolkit tool=Toolkit.getDefaultToolkit();
 		      	Dimension size=tool.getScreenSize();
 		     	final int WIDTH=630;
@@ -36,15 +38,15 @@ public class ClientWin extends JFrame {
 		     	this.setTitle("User - "+user);
 		     	this.setVisible(true);
 		     	this.setLayout(null);
-		     	this.setDefaultCloseOperation(this.EXIT_ON_CLOSE);
 
 		     	gw=new GroupWin();
 		     	
 		     	jtb=new JTabbedPane();
-		        jtb.addTab("Group",gw);
-		        
+		        jtb.addTab("Group",gw);	        
 		        this.add(jtb);
 		        jtb.setBounds(2,2,610,375);
+		        
+		        new GroupThread();
 		        	        
 		}
 		catch(Exception ex){
