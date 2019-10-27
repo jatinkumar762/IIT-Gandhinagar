@@ -1,19 +1,20 @@
 package Server;
 
+import java.net.Socket;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Vector;
 
 public class ServerRes {
 
 	 public static ServerWin win;
      public static Vector loggedIn;
-     public static boolean hasSession;
-     public static String sessId;
+     //public static Map<String,Vector> gpMap;
      static
      {
-   	  sessId="";
-   	  hasSession=false;
-   	  win=null;
-   	  loggedIn=new Vector();
+	   	  win=null;
+	   	  loggedIn=new Vector<Socket>();
+	      //gpMap=new HashMap<String, Vector>();	   	  
      }
 
 }
