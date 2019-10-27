@@ -22,13 +22,13 @@ public class GroupWin extends JPanel implements ActionListener {
 	JTable gpTable;
 	JScrollPane sp;
 	FileWin fw;
-	InputWin iw;
 	
 	public GroupWin() {
 		// TODO Auto-generated constructor stub
 		// Column Names 
 		this.setLayout(null);
 		
+		 
         String[] columnNames = { "Group Name", "Member" }; 
         String[][] data = new String[ClientRes.gpM.size()][2];
         int i=0;
@@ -87,16 +87,16 @@ public class GroupWin extends JPanel implements ActionListener {
 		try {
 			
 		    if(create_btn.isSelected()) {
-		    	iw = new InputWin("Create");
+		    	ClientRes.iw = new InputWin("Create");
 		    }
 		    else if(enter_btn.isSelected()) {
-		    	iw = new InputWin("Enter");
+		    	ClientRes.iw  = new InputWin("Enter");
 		    }
 		    else if(join_btn.isSelected()) {
-		    	iw = new InputWin("Join");	    	
+		    	ClientRes.iw  = new InputWin("Join");	    	
 		    }
 		    else if(leave_btn.isSelected()) {
-		    	iw = new InputWin("Leave");
+		    	ClientRes.iw  = new InputWin("Leave");
 		    }
 			
 		}
