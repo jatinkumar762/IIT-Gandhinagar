@@ -117,8 +117,11 @@ public class LoginWin extends JFrame implements ActionListener {
 	         ClientRes.logid = this.logid.getText().trim();
 	         	
 	         JOptionPane.showMessageDialog(this,resp,"User Signin",JOptionPane.INFORMATION_MESSAGE);         
-	         this.dispose();
-	         ClientRes.cWin = new ClientWin(ClientRes.logid);
+	         
+	         if(resp.equals("Successfully Loggedin")) {
+	        	 this.dispose();
+	        	 ClientRes.cWin = new ClientWin(ClientRes.logid);
+	         }
 	      }
 	          	     	      
 		}
