@@ -2,6 +2,8 @@ package Server;
 
 import java.io.*;
 import java.net.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import Client.ClientRes;
@@ -67,6 +69,10 @@ public class ClientThread extends Thread{
          		System.out.println("Success!");
      	}
 		
+     	file = new File("Server_Data\\GP_"+gpName+"\\Files");
+     	if(file.mkdir())
+     		System.out.println("Success!");
+     	
      	file = new File("Server_Data\\GP_"+gpName+"\\Log_Details.txt");
      	if(file.createNewFile())
      		System.out.println("Success!");
@@ -325,12 +331,76 @@ public class ClientThread extends Thread{
 		        	  }  
 		        	  
 		        	  FileWriter Fout = new FileWriter("Server_Data\\GP_"+gpName+"\\Chat_Details.txt",true);
-		              Fout.write(userName+"$$"+time+"$$"+chat+"\n");
+		              Fout.write(userName+"\t"+time+"\t"+chat+"\n");
 		          	  Fout.close();	        	  
 		          }
 		          else if(req.equals("Load_chat"))
 		          {
+		        	  String gpName=in.readObject().toString();
+		        	  File myFile = new File("Server_Data\\GP_"+gpName+"\\Chat_Details.txt");
+		        	  byte[] mybytearray = new byte[(int) myFile.length()];
+		        	  BufferedInputStream bis = new BufferedInputStream(new FileInputStream(myFile));
+		        	  bis.read(mybytearray, 0, mybytearray.length);
+		        	  ObjectOutputStream out=new ObjectOutputStream(this.client.getOutputStream());
+		        	  out.writeObject("Load_chat");
+		        	  out.writeObject(mybytearray.length);
+		        	  out.write(mybytearray, 0, mybytearray.length);
+		        	  out.flush();
+		          }
+		          else if(req.equals("Upload_File"))
+		          {
+		        	  String Filename = in.readObject().toString();
+		        	  String gpName=in.readObject().toString();
+		        	  int size=(int)in.readObject();
 		        	  
+   		        	  byte[] mybytearray = new byte[size];
+   		              FileOutputStream fos = new FileOutputStream("Server_Data\\GP_"+gpName+"\\Files\\"+Filename);
+	   		          BufferedOutputStream bos = new BufferedOutputStream(fos);
+	   		          int bytesRead = in.read(mybytearray, 0, mybytearray.length);
+	   		          bos.write(mybytearray, 0, bytesRead);
+	   		          bos.close();
+		        	  
+
+					  DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+					  LocalDateTime now = LocalDateTime.now();  
+						
+	   		          Fout = new FileWriter("Server_Data\\GP_"+ gpName +"\\Log_Details.txt",true);
+	   		          Fout.write(Filename+"\t"+this.logid+"\t"+"Upload"+"\t"+this.client.getRemoteSocketAddress().toString().replace("/","")+"\t"+dtf.format(now).toString()+"\n");
+	   		          Fout.close();
+	   		          
+	   		          Fout = new FileWriter("Server_Data\\GP_"+ gpName +"\\File_Details.txt",true);
+	   		          Fout.write(Filename+"\t\t"+dtf.format(now).toString()+"\t"+this.logid+"\n");
+	   		          Fout.close();
+	   		          
+	   		          ObjectOutputStream out=new ObjectOutputStream(this.client.getOutputStream());
+		        	  out.writeObject("Upload_File");
+		        	  out.writeObject("Successfully Uploaded");
+		          }
+		          else if(req.equals("List_File"))
+		          {
+		        	  String gpName=in.readObject().toString();
+		        	  File myFile = new File("Server_Data\\GP_"+gpName+"\\File_Details.txt");
+		        	  byte[] mybytearray = new byte[(int) myFile.length()];
+		        	  BufferedInputStream bis = new BufferedInputStream(new FileInputStream(myFile));
+		        	  bis.read(mybytearray, 0, mybytearray.length);
+		        	  ObjectOutputStream out=new ObjectOutputStream(this.client.getOutputStream());
+		        	  out.writeObject("List_File");
+		        	  out.writeObject(mybytearray.length);
+		        	  out.write(mybytearray, 0, mybytearray.length);
+		        	  out.flush();	        	     	  
+		          }
+		          else if(req.equals("Log_File"))
+		          {
+		        	  String gpName=in.readObject().toString();
+		        	  File myFile = new File("Server_Data\\GP_"+gpName+"\\Log_Details.txt");
+		        	  byte[] mybytearray = new byte[(int) myFile.length()];
+		        	  BufferedInputStream bis = new BufferedInputStream(new FileInputStream(myFile));
+		        	  bis.read(mybytearray, 0, mybytearray.length);
+		        	  ObjectOutputStream out=new ObjectOutputStream(this.client.getOutputStream());
+		        	  out.writeObject("Log_File");
+		        	  out.writeObject(mybytearray.length);
+		        	  out.write(mybytearray, 0, mybytearray.length);
+		        	  out.flush();
 		          }
 	                    
 	         }
