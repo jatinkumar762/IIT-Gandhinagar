@@ -2,18 +2,23 @@ package Client;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.ObjectOutputStream;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.filechooser.FileSystemView;
 
 public class FileWin extends JPanel implements ActionListener {
 
@@ -108,7 +113,58 @@ public class FileWin extends JPanel implements ActionListener {
 			}
 			else if(e.getSource().equals(select))
 			{
-							
+					if(listbtn.isSelected())
+					{
+						  ObjectOutputStream out=new ObjectOutputStream(ClientRes.client.getOutputStream());
+			        	  out.writeObject("List_File");
+			        	  out.writeObject(ClientRes.Activegp);		        	  
+					}
+					else if(uploadbtn.isSelected())
+					{
+						JFileChooser jf=new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+						jf.setDialogTitle("Upload File");
+						int returnValue = jf.showOpenDialog(null);
+						if (returnValue == JFileChooser.APPROVE_OPTION)
+						{
+							if (jf.getSelectedFile().isFile()) 
+							{
+							      File file=jf.getSelectedFile();
+							      String fileName=file.getName();
+						     
+					        	  byte[] mybytearray = new byte[(int) file.length()];
+					        	  BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
+					        	  bis.read(mybytearray, 0, mybytearray.length);
+					        	  ObjectOutputStream out=new ObjectOutputStream(ClientRes.client.getOutputStream());
+					        	  out.writeObject("Upload_File");
+					        	  out.writeObject(fileName);
+					        	  out.writeObject(ClientRes.Activegp);
+					        	  out.writeObject(mybytearray.length);
+					        	  out.write(mybytearray, 0, mybytearray.length);
+					        	  out.flush();
+							}
+						}
+												
+					}
+					else if(dloadbtn.isSelected())
+					{
+						
+					}
+					else if(delbtn.isSelected())
+					{
+						
+					}
+					else if(sharebtn.isSelected())
+					{
+						ShowWin sw=new ShowWin("Share_File");
+						
+						
+					}
+					else if(showbtn.isSelected())
+					{
+						 ObjectOutputStream out=new ObjectOutputStream(ClientRes.client.getOutputStream());
+			        	 out.writeObject("Log_File");
+			        	 out.writeObject(ClientRes.Activegp);		
+					}
 				
 			}
 			else if(e.getSource().equals(send)) {
