@@ -1,5 +1,9 @@
 package Client;
 
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.ObjectInputStream;
 
 import javax.swing.JOptionPane;
@@ -61,11 +65,77 @@ public class GroupThread extends Thread {
 			          String chat= in.readObject().toString();
 			          if(ClientRes.Activegp!=null && gpName.equals(ClientRes.Activegp))
 			          {
-			        	 ClientRes.cWin.fw.txtArea.append("\n"+userName+"\t"+time+"\t"+chat);			        	  
-			        	  		        	  
-			          }
-   		        	  
-		          }    		
+			        	 ClientRes.cWin.fw.txtArea.append("\n"+userName+"\t"+time+"\t"+chat);			        	  			        	  		        	  
+			          }        	  
+		          }  
+   		          else if(req.equals("Load_chat"))
+		          {
+   		        	 ShowWin sw=new ShowWin("loadchat");
+   		        	 
+   		        	 String property = "java.io.tmpdir";
+   	   		         String tempDir = System.getProperty(property);
+   		        	 int size=(int)in.readObject();
+   		        	 byte[] mybytearray = new byte[size];
+   		             FileOutputStream fos = new FileOutputStream(tempDir+"chat.txt");
+	   		         BufferedOutputStream bos = new BufferedOutputStream(fos);
+	   		         int bytesRead = in.read(mybytearray, 0, mybytearray.length);
+	   		         bos.write(mybytearray, 0, bytesRead);
+	   		         bos.close();
+	   		         
+	   		         BufferedReader br = new BufferedReader(new FileReader(tempDir+"chat.txt"));
+	        	     String line;
+	        	     while ((line = br.readLine()) != null)
+	        	     {
+		        		sw.chatArea.append("\n"+line);	        	    	 	        	    	 
+		        	 }   		         
+		          }
+   		          else if(req.equals("Upload_File"))
+		          {
+   		        	JOptionPane.showMessageDialog(ClientRes.cWin,in.readObject().toString(),"File Upload",JOptionPane.INFORMATION_MESSAGE);
+		          }
+   		          else if(req.equals("List_File"))
+		          {
+   		        	 ShowWin sw=new ShowWin("List_File");
+  		        	 
+  		        	 String property = "java.io.tmpdir";
+  	   		         String tempDir = System.getProperty(property);
+  		        	 int size=(int)in.readObject();
+  		        	 byte[] mybytearray = new byte[size];
+  		             FileOutputStream fos = new FileOutputStream(tempDir+"temp.txt");
+	   		         BufferedOutputStream bos = new BufferedOutputStream(fos);
+	   		         int bytesRead = in.read(mybytearray, 0, mybytearray.length);
+	   		         bos.write(mybytearray, 0, bytesRead);
+	   		         bos.close();
+	   		         
+	   		         BufferedReader br = new BufferedReader(new FileReader(tempDir+"temp.txt"));
+	        	     String line;
+	        	     while ((line = br.readLine()) != null)
+	        	     {
+		        		sw.fileArea.append("\n"+line);	        	    	 	        	    	 
+		        	 }  
+		          }
+   		          else if(req.equals("Log_File"))
+		          {
+		        	 ShowWin sw=new ShowWin("Log_File");
+		        	 
+		        	 String property = "java.io.tmpdir";
+	   		         String tempDir = System.getProperty(property);
+		        	 int size=(int)in.readObject();
+		        	 byte[] mybytearray = new byte[size];
+		             FileOutputStream fos = new FileOutputStream(tempDir+"temp.txt");
+	   		         BufferedOutputStream bos = new BufferedOutputStream(fos);
+	   		         int bytesRead = in.read(mybytearray, 0, mybytearray.length);
+	   		         bos.write(mybytearray, 0, bytesRead);
+	   		         bos.close();
+	   		         
+	   		         BufferedReader br = new BufferedReader(new FileReader(tempDir+"temp.txt"));
+	        	     String line;
+	        	     while ((line = br.readLine()) != null)
+	        	     {
+		        		sw.logArea.append("\n"+line);	        	    	 	        	    	 
+		        	 } 
+	        	     
+		          }
         		
         	}   	
         }
