@@ -250,7 +250,8 @@ public class ClientThread extends Thread{
 				        	  while ((line = br.readLine()) != null) {
 				        		  if(line.equals(ClientRes.logid))
 				        			  flag=true;
-				        	       members.addElement(line);
+				        		  else
+				        	          members.addElement(line);
 				        	  }
 				        	  if(flag) {
 					        	  Fout = new FileWriter("Server_Data\\GP_"+ gpName +"\\Member_Details.txt");
@@ -258,7 +259,7 @@ public class ClientThread extends Thread{
 					        	  Fout.close();
 					        	  Fout = new FileWriter("Server_Data\\GP_"+ gpName +"\\Member_Details.txt",true);
 					        	  for(int i=0;i<members.size();i++)
-					        		  Fout.write(members.get(i).toString());
+					        		  Fout.write(members.get(i).toString()+"\n");
 					        	  Fout.close();
 					        	  members = null;
 					        	  ObjectOutputStream out=new ObjectOutputStream(this.client.getOutputStream());
@@ -551,7 +552,7 @@ public class ClientThread extends Thread{
 	         }
 	         
 	       }catch(Exception ex) {
-	    	  ex.printStackTrace();
+	    	  //ex.printStackTrace();
 	       }
 	 }
 }
