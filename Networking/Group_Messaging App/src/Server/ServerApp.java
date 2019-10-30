@@ -13,7 +13,7 @@ public class ServerApp extends JFrame {
 
 	public ServerApp() 
 	{
-		// TODO Auto-generated constructor stub
+
 		try {	
 			    ServerSocket ss=new ServerSocket(6666); 
 			    System.out.println("Server Started.......");
@@ -33,13 +33,13 @@ public class ServerApp extends JFrame {
 	         	if(file.getParentFile().mkdir()) {
 		         	if(file.createNewFile())
 		         		System.out.println("Success!");
-		            else 
-		            	System.out.println ("Error, file already exists.");
+//		            else 
+//		            	System.out.println ("Error, file already exists.");
 	         	}else {
 	         		if(file.createNewFile())
 		         		System.out.println("Success!");
-		            else 
-		            	System.out.println ("Error, file already exists.");
+//		            else 
+//		            	System.out.println ("Error, file already exists.");
 	         	}
 		         		         	
 				  while(true)
@@ -59,7 +59,6 @@ public class ServerApp extends JFrame {
 
 	public static void main(String[] args) 
 	{
-		// TODO Auto-generated method stub
 		new ServerApp();	
 	}
 
