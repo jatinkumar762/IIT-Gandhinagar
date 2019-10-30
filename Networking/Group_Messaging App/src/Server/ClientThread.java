@@ -2,6 +2,8 @@ package Server;
 
 import java.io.*;
 import java.net.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -19,6 +21,9 @@ public class ClientThread extends Thread{
 	  private FileWriter Fout = null;
       private Map um=null;
       
+      private DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+	  private LocalDateTime now = LocalDateTime.now();  
+	  
 	public ClientThread(Socket client) {
 		// TODO Auto-generated constructor stub		
 		 this.client=client;
@@ -354,15 +359,12 @@ public class ClientThread extends Thread{
 		        	  int size=(int)in.readObject();
 		        	  
    		        	  byte[] mybytearray = new byte[size];
-   		              FileOutputStream fos = new FileOutputStream("Server_Data\\GP_"+gpName+"\\Files\\"+Filename);
+   		              FileOutputStream fos = new FileOutputStream(new File("Server_Data\\GP_"+gpName+"\\Files\\"+Filename));
 	   		          BufferedOutputStream bos = new BufferedOutputStream(fos);
 	   		          int bytesRead = in.read(mybytearray, 0, mybytearray.length);
 	   		          bos.write(mybytearray, 0, bytesRead);
 	   		          bos.close();
 		        	  
-
-					  DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-					  LocalDateTime now = LocalDateTime.now();  
 						
 	   		          Fout = new FileWriter("Server_Data\\GP_"+ gpName +"\\Log_Details.txt",true);
 	   		          Fout.write(Filename+"\t"+this.logid+"\t"+"Upload"+"\t"+this.client.getRemoteSocketAddress().toString().replace("/","")+"\t"+dtf.format(now).toString()+"\n");
@@ -401,6 +403,149 @@ public class ClientThread extends Thread{
 		        	  out.writeObject(mybytearray.length);
 		        	  out.write(mybytearray, 0, mybytearray.length);
 		        	  out.flush();
+		          }
+		          else if(req.equals("Del_File"))
+		          {
+		        	  String gp=in.readObject().toString();
+		        	  String fName=in.readObject().toString();        	  
+		        	  File file = new File("Server_Data\\GP_"+gp+"\\Files\\"+fName);
+		        	  
+		        	  if(file.delete()) 
+		        	  {        		  
+				        	  Fout = new FileWriter("Server_Data\\GP_"+ gp +"\\Log_Details.txt",true);
+			   		          Fout.write(fName+"\t"+this.logid+"\t"+"Delete"+"\t"+this.client.getRemoteSocketAddress().toString().replace("/","")+"\t"+dtf.format(now).toString()+"\n");
+			   		          Fout.close();
+			   		          
+			   		          ObjectOutputStream out=new ObjectOutputStream(this.client.getOutputStream());
+				        	  out.writeObject("Del_File");
+				        	  out.writeObject("Deleted Successfully");
+		        	  }
+		        	  else {
+		        		  ObjectOutputStream out=new ObjectOutputStream(this.client.getOutputStream());
+			        	  out.writeObject("Del_File");
+			        	  out.writeObject("Not Valid File Name");
+		        	  }
+		          }
+		          else if(req.equals("Dow_File"))
+		          {
+		        	  String gp=in.readObject().toString();
+		        	  String fName=in.readObject().toString();
+		        	  
+		        	   File folder = new File("Server_Data\\GP_"+gp+"\\Files");
+			      	   File[] listOfFiles = folder.listFiles();
+			      	   boolean gexist = false;
+			      	   for (File file : listOfFiles) 
+			      	   {
+		      			if (file.isFile()&&file.getName().equals(fName)) {
+		      				gexist=true;
+		      				break;
+		      			}
+			      	   }
+		        	  
+			      	   if(gexist) {
+				        	  File myFile = new File("Server_Data\\GP_"+gp+"\\Files\\"+fName);
+				        	  byte[] mybytearray = new byte[(int) myFile.length()];
+				        	  BufferedInputStream bis = new BufferedInputStream(new FileInputStream(myFile));
+				        	  bis.read(mybytearray, 0, mybytearray.length);
+				        	  ObjectOutputStream out=new ObjectOutputStream(this.client.getOutputStream());
+				        	  out.writeObject("Dow_File");
+				        	  out.writeObject(fName);
+				        	  out.writeObject(mybytearray.length);
+				        	  out.write(mybytearray, 0, mybytearray.length);
+				        	  out.flush();
+				        	  
+				        	  Fout = new FileWriter("Server_Data\\GP_"+ gp +"\\Log_Details.txt",true);
+			   		          Fout.write(fName+"\t"+this.logid+"\t"+"Download"+"\t"+this.client.getRemoteSocketAddress().toString().replace("/","")+"\t"+dtf.format(now).toString()+"\n");
+			   		          Fout.close();
+			      	   }
+			      	   else {
+			      		       
+			      		     ObjectOutputStream out=new ObjectOutputStream(this.client.getOutputStream());
+			        	     out.writeObject("Dow_File");
+			        	     out.writeObject("File not exist");
+			      	   }
+		        	  
+		        	  
+		          }
+		          else if(req.equals("Share_File"))
+		          {
+		        	  String activegp = in.readObject().toString();
+		        	  String fName= in.readObject().toString();
+		        	  String toGP= in.readObject().toString();
+		        	  
+		        	   File folder = new File("Server_Data");
+			      	   File[] listOfFiles = folder.listFiles();
+			      	   boolean gexist = false;
+			      	   for (File file : listOfFiles) 
+			      	   {
+		      			if (file.isDirectory()&&file.getName().split("_")[1].equals(toGP)) {
+		      				gexist=true;
+		      				break;
+		      			}
+			      	   }
+		        	   if(!gexist)
+		        	   {
+		        		     ObjectOutputStream out=new ObjectOutputStream(this.client.getOutputStream());
+			        	     out.writeObject("Share_File");
+			        	     out.writeObject("Group not exist");
+		        	   }
+		        	   else {
+		        		       gexist=false;
+		        		       folder = new File("Server_Data\\GP_"+activegp+"\\Files");
+		        		       listOfFiles = folder.listFiles();
+			        		   for (File file : listOfFiles) 
+					      	   {
+				      			if (file.isFile()&&file.getName().equals(fName)) {
+				      				gexist=true;
+				      				break;
+				      			}
+					      	   }
+			        		   if(!gexist)
+				        	   {
+				        		     ObjectOutputStream out=new ObjectOutputStream(this.client.getOutputStream());
+					        	     out.writeObject("Share_File");
+					        	     out.writeObject("File not exist");
+				        	   }
+			        		   else
+			        		   {
+			        			   
+			        			   BufferedReader br = new BufferedReader(new FileReader("Server_Data\\GP_"+ toGP +"\\Member_Details.txt"));
+						           String line;
+						           Boolean flag= false;
+						           while ((line = br.readLine()) != null) {
+						        	   if(line.equals(ClientRes.logid))
+						        	      flag=true;
+						           }
+						        	  
+						           if(flag)
+						           {
+					        			   File from=new File("Server_Data\\GP_"+activegp+"\\Files\\"+fName);
+					        			   File to=new File("Server_Data\\GP_"+toGP+"\\Files\\"+fName); 
+					        			   
+					        			   Files.copy(from.toPath(), to.toPath());
+					        			   ObjectOutputStream out=new ObjectOutputStream(this.client.getOutputStream());
+							        	   out.writeObject("Share_File");
+							        	   out.writeObject("Successfully Shared");
+					        			   
+							        	   Fout = new FileWriter("Server_Data\\GP_"+ activegp +"\\Log_Details.txt",true);
+							   		       Fout.write(fName+"\t"+this.logid+"\t"+"Shared"+"\t"+this.client.getRemoteSocketAddress().toString().replace("/","")+"\t"+dtf.format(now).toString()+"\n");
+							   		       Fout.close();
+							   		       						   		    
+							        	   Fout = new FileWriter("Server_Data\\GP_"+ toGP +"\\Log_Details.txt",true);
+							   		       Fout.write(fName+"\t"+this.logid+"\t"+"Received"+"\t"+this.client.getRemoteSocketAddress().toString().replace("/","")+"\t"+dtf.format(now).toString()+"\n");
+							   		       Fout.close();
+					        			  
+						           }
+						           else {
+						        	   ObjectOutputStream out=new ObjectOutputStream(this.client.getOutputStream());
+						        	   out.writeObject("Share_File");
+						        	   out.writeObject("Not Member of Dest. Group");
+						           }
+			        			   
+			        		   }
+		        	   }
+		        	  
+		        	  
 		          }
 	                    
 	         }
