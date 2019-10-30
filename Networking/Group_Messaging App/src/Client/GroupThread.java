@@ -2,10 +2,12 @@ package Client;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.ObjectInputStream;
 
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 public class GroupThread extends Thread {
@@ -135,6 +137,43 @@ public class GroupThread extends Thread {
 		        		sw.logArea.append("\n"+line);	        	    	 	        	    	 
 		        	 } 
 	        	     
+		          }
+   		          else if(req.equals("Del_File"))
+		          {		        	  
+   		        	JOptionPane.showMessageDialog(ClientRes.cWin,in.readObject().toString(),"File Delete Operation",JOptionPane.ERROR_MESSAGE);         	  
+		          }
+   		          else if(req.equals("Dow_File"))
+		          {		
+   		        	 String fName=in.readObject().toString();
+   		        	 if(!fName.equals("File not exist")) 
+   		        	 {
+		   		        	 int size=(int)in.readObject();
+				        	 byte[] mybytearray = new byte[size];
+				        	 int bytesRead = in.read(mybytearray, 0, mybytearray.length);   
+			   		         
+					   		 JFileChooser fileChooser = new JFileChooser();
+					   		 fileChooser.setDialogTitle("Save File");   
+					   		 fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+					   		 int userSelection = fileChooser.showSaveDialog(ClientRes.cWin);
+					   		    
+					   		 if (userSelection == JFileChooser.APPROVE_OPTION) {
+					   			   String path=fileChooser.getSelectedFile().getAbsolutePath();
+					   			   FileOutputStream fos = new FileOutputStream(path+fName);
+					   		       BufferedOutputStream bos = new BufferedOutputStream(fos);			   		        
+					   		       bos.write(mybytearray, 0, bytesRead);
+					   		       bos.close();
+					   		 }
+					   		JOptionPane.showMessageDialog(ClientRes.cWin,"File Successfully Downloaded","File Download Operation",JOptionPane.INFORMATION_MESSAGE);
+   		        	 }
+   		        	 else {
+   		        		JOptionPane.showMessageDialog(ClientRes.cWin,fName,"File Download Operation",JOptionPane.ERROR_MESSAGE);
+   		        	 }
+	   		         
+		          }
+   		          else if(req.equals("Share_File"))
+		          {	
+   		        	    String status=in.readObject().toString();
+   		        	    JOptionPane.showMessageDialog(ClientRes.cWin,status,"File Share Operation",JOptionPane.INFORMATION_MESSAGE); 		        	    		        	  
 		          }
         		
         	}   	
