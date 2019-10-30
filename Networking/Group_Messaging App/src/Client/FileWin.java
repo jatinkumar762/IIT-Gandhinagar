@@ -141,17 +141,18 @@ public class FileWin extends JPanel implements ActionListener {
 					        	  out.writeObject(mybytearray.length);
 					        	  out.write(mybytearray, 0, mybytearray.length);
 					        	  out.flush();
+					        	  
 							}
 						}
 												
 					}
 					else if(dloadbtn.isSelected())
 					{
-						
+						ShowWin sw=new ShowWin("Dow_File");
 					}
 					else if(delbtn.isSelected())
 					{
-						
+						ShowWin sw=new ShowWin("Del_File");
 					}
 					else if(sharebtn.isSelected())
 					{
