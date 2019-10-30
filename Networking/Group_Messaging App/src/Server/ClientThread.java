@@ -216,6 +216,7 @@ public class ClientThread extends Thread{
 					        	  Fout.flush();
 					        	  Fout.close();
 					        	  out.writeObject("User Added Sucessfully"); 
+					        	  out.writeObject(gpName); 
 				        	  }
 			      		}
 			      		else {
@@ -265,6 +266,7 @@ public class ClientThread extends Thread{
 					        	  ObjectOutputStream out=new ObjectOutputStream(this.client.getOutputStream());
 					        	  out.writeObject("Leave Group"); 
 					        	  out.writeObject("User Removed Sucessfully"); 
+					        	  out.writeObject(gpName);
 				        	  }else {
 				        		  ObjectOutputStream out=new ObjectOutputStream(this.client.getOutputStream());
 				        		  out.writeObject("Leave Group"); 
