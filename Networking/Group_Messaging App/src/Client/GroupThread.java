@@ -30,11 +30,44 @@ public class GroupThread extends Thread {
    		          if(req.equals("Create Group")) {  		        	    		    	
 			    	JOptionPane.showMessageDialog(ClientRes.iw,in.readObject().toString(),"Group Creation",JOptionPane.INFORMATION_MESSAGE); 
    		          }
-   		          else if(req.equals("Join Group")) {   		        	  
-   		        	JOptionPane.showMessageDialog(ClientRes.iw,in.readObject().toString(),"Group Creation",JOptionPane.INFORMATION_MESSAGE); 
+   		          else if(req.equals("Join Group")) {   
+   		        	   
+   		        	String resp =in.readObject().toString();
+   		        	if(resp.equals("User Added Sucessfully")) {
+   		        		
+   		        		String gp = in.readObject().toString();
+   		        		for(int i=0;i<ClientRes.cWin.gw.gpTable.getRowCount();i++)
+	   		        	{
+	   		        		if(ClientRes.cWin.gw.gpTable.getValueAt(i, 0).toString().equals(gp)) {	   		        			
+	   		        			ClientRes.cWin.gw.gpTable.setValueAt("Yes",i, 1);
+	   		        		}
+	   		        	}
+	   		        	JOptionPane.showMessageDialog(ClientRes.iw,resp,"Group Creation",JOptionPane.INFORMATION_MESSAGE);   		        	
+	   		        		   		        	
+   		        	}else {
+   		        		JOptionPane.showMessageDialog(ClientRes.iw,resp,"Group Creation",JOptionPane.ERROR_MESSAGE);
+   		        	}
+   		        	
    		          }
-   		          else if(req.equals("Leave Group")) {	        	  
-   		        	JOptionPane.showMessageDialog(ClientRes.iw,in.readObject().toString(),"Group Creation",JOptionPane.INFORMATION_MESSAGE); 
+   		          else if(req.equals("Leave Group")) {	
+   		        	 
+   		        	String resp =in.readObject().toString(); 
+   		        	if(resp.equals("User Removed Sucessfully")){
+	   		        	 
+   		        		String gp = in.readObject().toString();
+	   		        	for(int i=0;i<ClientRes.cWin.gw.gpTable.getRowCount();i++)
+	   		        	{
+	   		        		if(ClientRes.cWin.gw.gpTable.getValueAt(i, 0).toString().equals(gp)) {
+	   		        			System.out.println(ClientRes.cWin.gw.gpTable.getValueAt(i, 0));
+	   		        			ClientRes.cWin.gw.gpTable.setValueAt("No",i, 1);
+	   		        		}
+	   		        	}
+	   		        	JOptionPane.showMessageDialog(ClientRes.iw,resp,"Group Creation",JOptionPane.INFORMATION_MESSAGE);
+   		        	}
+   		        	else {
+   		        		JOptionPane.showMessageDialog(ClientRes.iw,resp,"Group Creation",JOptionPane.ERROR_MESSAGE);
+   		        	}
+   		        	
    		          }
    		          else if(req.equals("Enter Group")) {
    		        	  
