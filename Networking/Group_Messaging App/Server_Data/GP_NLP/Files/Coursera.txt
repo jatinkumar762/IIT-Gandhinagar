@@ -1,4 +1,0 @@
-dl_coursera --cookies C:\Users\jatin_kumar\Downloads\cookies.txt --slug pca-machine-learning --outdir E:\ --how builtin
-
-
-pramod.c@iitgn.ac.in
