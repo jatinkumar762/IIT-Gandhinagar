@@ -1,7 +1,0 @@
-Algo.txt	Satish	Upload	127.0.0.1:10626	2019/10/31 12:59:14
-Algo.txt	Satish	Download	127.0.0.1:10626	2019/10/31 12:59:14
-Algo.txt	Satish	Shared	127.0.0.1:10626	2019/10/31 12:59:14
-Algo.txt	Jatin	Delete	127.0.0.1:10646	2019/10/31 13:03:01
-Coursera.txt	Jatin	Upload	127.0.0.1:10646	2019/10/31 13:03:01
-Coursera.txt	Jatin	Download	127.0.0.1:10646	2019/10/31 13:03:01
-Coursera.txt	Jatin	Delete	127.0.0.1:10646	2019/10/31 13:03:01
