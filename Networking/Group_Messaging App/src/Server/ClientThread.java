@@ -414,10 +414,31 @@ public class ClientThread extends Thread{
 		        	  File file = new File("Server_Data\\GP_"+gp+"\\Files\\"+fName);
 		        	  
 		        	  if(file.delete()) 
-		        	  {        		  
+		        	  {       
+			        		  BufferedReader br = new BufferedReader(new FileReader("Server_Data\\GP_"+ gp +"\\File_Details.txt"));			        	
+			        		  Vector<String> data = new Vector<String>();
+				        	  String line;
+				        	  while ((line = br.readLine()) != null) {
+				        		  if(line.contains(fName)){
+				        			  
+				        		  }else {
+				        			  data.add(line);
+				        		  }
+				        	  }
+				        	  
+				        	  Fout = new FileWriter("Server_Data\\GP_"+ gp +"\\File_Details.txt");
+				        	  Fout.write("");
+				        	  Fout.close();
+				        	  Fout = new FileWriter("Server_Data\\GP_"+ gp +"\\File_Details.txt",true);
+				        	  for(int i=0;i<data.size();i++)
+				        		  Fout.write(data.get(i).toString()+"\n");
+				        	  Fout.close();
+		        		  
 				        	  Fout = new FileWriter("Server_Data\\GP_"+ gp +"\\Log_Details.txt",true);
 			   		          Fout.write(fName+"\t"+this.logid+"\t"+"Delete"+"\t"+this.client.getRemoteSocketAddress().toString().replace("/","")+"\t"+dtf.format(now).toString()+"\n");
 			   		          Fout.close();
+			   		          
+			   		          br.close();
 			   		          
 			   		          ObjectOutputStream out=new ObjectOutputStream(this.client.getOutputStream());
 				        	  out.writeObject("Del_File");
@@ -445,7 +466,8 @@ public class ClientThread extends Thread{
 		      			}
 			      	   }
 		        	  
-			      	   if(gexist) {
+			      	   if(gexist) 
+			      	   {
 				        	  File myFile = new File("Server_Data\\GP_"+gp+"\\Files\\"+fName);
 				        	  byte[] mybytearray = new byte[(int) myFile.length()];
 				        	  BufferedInputStream bis = new BufferedInputStream(new FileInputStream(myFile));
@@ -456,7 +478,7 @@ public class ClientThread extends Thread{
 				        	  out.writeObject(mybytearray.length);
 				        	  out.write(mybytearray, 0, mybytearray.length);
 				        	  out.flush();
-				        	  
+				        	  bis.close();
 				        	  Fout = new FileWriter("Server_Data\\GP_"+ gp +"\\Log_Details.txt",true);
 			   		          Fout.write(fName+"\t"+this.logid+"\t"+"Download"+"\t"+this.client.getRemoteSocketAddress().toString().replace("/","")+"\t"+dtf.format(now).toString()+"\n");
 			   		          Fout.close();
@@ -554,7 +576,7 @@ public class ClientThread extends Thread{
 	         }
 	         
 	       }catch(Exception ex) {
-	    	  //ex.printStackTrace();
+	    	  ex.printStackTrace();
 	       }
 	 }
 }
