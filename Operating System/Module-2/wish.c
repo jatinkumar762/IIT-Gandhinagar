@@ -6,8 +6,8 @@
 #include<sys/wait.h>
 #include<fcntl.h> 
 
-// size_t path = 9;
-// char cmdPath[path][50]={"/usr/local/sbin","/usr/local/bin","/usr/sbin","/usr/bin","/sbin","/bin","/usr/games","/usr/local/games","/snap/bin"};
+size_t path = 1;
+char cmdPath[10][100]={"/bin/"};
 
 char error_message[30] = "An error has occurred\n";
 
@@ -92,55 +92,69 @@ int checkRedirect(char** command,int* pi)
 
 void parseInput(char** command,int count,int RD_count)
 {
-    int i,j,rd_location;
-    char cmdPath[50]="/bin/";  
+    int i,j,rd_location,k; 
     char tmp[200];
 
     if(RD_count>0)
     {
-        for(i=0;i<count;i++)
-           if(!strcmp(command[i],">"))
-           {
-               rd_location=i;
-               break;
-           }
-
-        if(RD_count>1 || (count-rd_location-1)>1 || (count-rd_location-1)==0)
+        if (fork() == 0)
         {
-            write(STDERR_FILENO, error_message, strlen(error_message));
+                    for(i=0;i<count;i++)
+                    if(!strcmp(command[i],">"))
+                    {
+                        rd_location=i;
+                        break;
+                    }
+
+                    if(RD_count>1 || (count-rd_location-1)>1 || (count-rd_location-1)==0)
+                    {
+                        write(STDERR_FILENO, error_message, strlen(error_message));
+                    }
+                    else 
+                    {
+                        int fd = open(command[rd_location+1], O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
+
+                        dup2(fd, 1);   // make stdout go to file
+                        dup2(fd, 2);   // make stderr go to file - you may choose to not do this
+                                    // or perhaps send stderr to another file
+
+                        close(fd);     // fd no longer needed - the dup'ed handles are sufficient
+
+                        command[rd_location]=NULL;
+
+                        for(i=0;cmdPath[0][i];i++)
+                           tmp[i]=cmdPath[0][i];
+                        for(j=0;command[0][j];i++,j++)
+                            tmp[i]=command[0][j];
+
+                        tmp[i]='\0';
+
+                        execv(tmp, command);
+                    }
         }
-        else if (fork() == 0)
+    }
+    else if(fork()==0) {
+
+        for(k=0;k<path;k++)
         {
-            int fd = open(command[rd_location+1], O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
-
-            dup2(fd, 1);   // make stdout go to file
-            dup2(fd, 2);   // make stderr go to file - you may choose to not do this
-                        // or perhaps send stderr to another file
-
-            close(fd);     // fd no longer needed - the dup'ed handles are sufficient
-
-            command[rd_location]=NULL;
-
-            for(i=0;cmdPath[i];i++)
-               tmp[i]=cmdPath[i];
+             for(i=0;cmdPath[k][i];i++)
+               tmp[i]=cmdPath[k][i];
             for(j=0;command[0][j];i++,j++)
                 tmp[i]=command[0][j];
 
             tmp[i]='\0';
 
-            execv(tmp, command);
+            if(execv(tmp, command)==-1){
+                // if(k==0)
+                //     err=1;
+                //write(STDERR_FILENO, error_message, strlen(error_message));
+            }
+            else {
+                break;
+            }
         }
-    }
-    else if(fork()==0) {
-
-        for(i=0;cmdPath[i];i++)
-               tmp[i]=cmdPath[i];
-        for(j=0;command[0][j];i++,j++)
-               tmp[i]=command[0][j];
-
-        tmp[i]='\0';
-
-        execv(tmp, command);
+        if(k==path)
+            write(STDERR_FILENO, error_message, strlen(error_message));
 
     }
     wait(NULL);
@@ -150,17 +164,17 @@ int main(int argc,char* argv[])
 {
     char** command;
     char** multiCommand;
-    int i=0,j,mc_Count=0,RD_count=0;
-    size_t size=100;
+    size_t len;
+    int i=0,j,mc_Count=0,RD_count=0,t;
+    size_t size=300;
     char* buff=(char*)malloc(sizeof(char)*size);
-    //char* temp=(char*)malloc(sizeof(char)*size);
     multiCommand=(char**)malloc(sizeof(char*)*10);
     for(i=0;i<10;i++)
-    multiCommand[i]=(char*)malloc(sizeof(char)*50);
+    multiCommand[i]=(char*)malloc(sizeof(char)*100);
 
     command=(char**)malloc(sizeof(char*)*10);
     for(i=0;i<10;i++)
-    command[i]=(char*)malloc(sizeof(char)*50);
+    command[i]=(char*)malloc(sizeof(char)*100);
 
     if(argc==1)
     {
@@ -177,7 +191,6 @@ int main(int argc,char* argv[])
                             mc_Count=0;
                             while((multiCommand[mc_Count]=strsep(&buff, "&"))!=NULL){
                                     multiCommand[mc_Count]=removeSpaces(multiCommand[mc_Count]);
-                                    //printf("%s%ld\n",multiCommand[mc_Count],strlen(multiCommand[mc_Count]));
                                     mc_Count++;      
                             }
 
@@ -191,14 +204,20 @@ int main(int argc,char* argv[])
                                             else
                                                 i++;  
                                         }
-                                        if(strcmp(command[0],"exit")==0)
-                                            exit(0);
+                                        if(strcmp(command[0],"exit")==0){
+                                            if(i>1){
+                                                write(STDERR_FILENO, error_message, strlen(error_message));
+                                            }
+                                            else
+                                            {
+                                                 exit(0);
+                                            }                                        
+                                        }
                                         else if(strcmp(command[0],"cd")==0)
                                         {
                                                 if(i>2)
                                                 {
                                                     write(STDERR_FILENO, error_message, strlen(error_message));
-                                                    exit(1);
                                                 }
                                                 else{
                                                     if(chdir(command[1])!=0)
@@ -207,7 +226,20 @@ int main(int argc,char* argv[])
                                         }
                                         else if(strcmp(command[0],"path")==0)
                                         {
+                                            if(i<=1){
 
+                                            }
+                                            else{
+                                                path=1;
+                                                for(t=1;t<i;t++)
+                                                {
+                                                strcpy(cmdPath[t],command[t]);
+                                                cmdPath[t][strlen(cmdPath[t])]='/';
+                                                cmdPath[t][strlen(cmdPath[t])]='\0';
+                                                printf("%s\n",cmdPath[t]);
+                                                path++;
+                                                }
+                                            }
                                         }
                                         else
                                         {
@@ -223,26 +255,81 @@ int main(int argc,char* argv[])
         FILE *fp = fopen(argv[1],"r");
 		if(fp!=NULL)
         {
-			fseek(fp, 0L, SEEK_END);
-			int file_len = ftell(fp)+1;
-			fseek(fp, 0L, SEEK_SET);
-			char *command = (char*)calloc(file_len, sizeof(char));
-			char ch;
-			int index = 0;
-			while((ch=fgetc(fp))!=EOF)
-            {
-				if(ch=='\n')
-                {
-					command[index]='\0';
-					index=0;
-					//parse_arg(command);				
-				}
-				else
-					command[index++]=ch;
+			while (getline(&buff, &len, fp)!= -1)
+            {	
+                // if(fork()==0)
+                // {
+                        buff[strlen(buff)-1]='\0';
+
+                        mc_Count=0;
+                        while((multiCommand[mc_Count]=strsep(&buff, "&"))!=NULL)
+                        {                    
+                                multiCommand[mc_Count]=removeSpaces(multiCommand[mc_Count]);
+                                mc_Count++;      
+                        }
+
+                        for(j=0;j<mc_Count;j++)
+                        {
+                                    i=0;
+                                    while((command[i]=strsep(&multiCommand[j], " "))!=NULL)
+                                    {
+                                        if(strchr(command[i], '>'))
+                                            RD_count=checkRedirect(command,&i);
+                                        else
+                                            i++;  
+                                    }
+                                    if(strcmp(command[0],"exit")==0)
+                                    {
+                                        if(i>1){
+                                            write(STDERR_FILENO, error_message, strlen(error_message));
+                                        }
+                                        else
+                                        {
+                                                exit(0);
+                                        }   
+                                    }
+                                    else if(strcmp(command[0],"cd")==0)
+                                    {
+                                            if(i>2)
+                                            {
+                                                write(STDERR_FILENO, error_message, strlen(error_message));
+                                            }
+                                            else{
+                                                if(chdir(command[1])!=0)
+                                                    write(STDERR_FILENO, error_message, strlen(error_message)); 
+                                            }
+                                    }
+                                    else if(strcmp(command[0],"path")==0)
+                                    {
+                                            if(i<=1)
+                                            {
+                                                  path=1;
+                                                  strcpy(cmdPath[1],"");
+                                            }
+                                            else{
+                                                path=1;
+                                                for(t=1;t<i;t++){
+                                                strcpy(cmdPath[t],command[t]);
+                                                cmdPath[t][strlen(cmdPath[t])]='/';
+                                                cmdPath[t][strlen(cmdPath[t])]='\0';
+                                                printf("%s\n",cmdPath[t]);
+                                                path++;
+                                                }
+                                            }
+                                    }
+                                    else
+                                    {
+                                        parseInput(command,i,RD_count);
+                                    }       
+                        }	
+                // }
+                // wait(NULL);
+                buff=(char*)malloc(sizeof(char)*size);			
 			}
-			fclose(fp);
+				
 		}
-    }
+		fclose(fp);
+	}
     else if(argc>2)
     {
         write(STDERR_FILENO, error_message, strlen(error_message));
