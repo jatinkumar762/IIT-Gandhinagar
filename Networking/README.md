@@ -16,11 +16,11 @@ Description:
 Implement an advanced group messaging application (for ex: Slack, Trello). 
 
 The list of features:
-●	The system consists of a server that can have multiple chat groups at a time.
-●	A cloud storage - stores shared media for every group chat
-●	Real-time messaging to all the members of the group
-●	File sharing features with other groups (can be done only if the user is common to both the groups)
-●	Each client user can log in to the server with valid credentials and can upload/ download/ delete any number of files he/she wishes to.
+- The system consists of a server that can have multiple chat groups at a time.
+-	A cloud storage - stores shared media for every group chat
+-	Real-time messaging to all the members of the group
+-	File sharing features with other groups (can be done only if the user is common to both the groups)
+-	Each client user can log in to the server with valid credentials and can upload/ download/ delete any number of files he/she wishes to.
 
 
 
@@ -31,14 +31,10 @@ Implementation details:
 
 
 The Server:
-
-●	The server will listen to two different ports: one for control messages and the other for data messages.
-
-●	The server consists of one root directory, inside which separate directories for separate “messaging groups” will be present. Each user of the group can upload/download/delete any number of files to/from the designated directory on the server. Users of other groups can only download the files (only if they have access to a particular file).
-
-●	The server has to maintain one log file for each group. After each successful user action, the server will log that action in the corresponding log file with the following details: filename, username (the user who took this action), action (upload/ download/ delete/ share), IP address (of the user machine), date and time.
-
-●	If a new user signs up, he gets to see a list of all groups and gets to join any group (note: all are public groups).
+-	The server will listen to two different ports: one for control messages and the other for data messages.
+-	The server consists of one root directory, inside which separate directories for separate “messaging groups” will be present. Each user of the group can upload/download/delete any number of files to/from the designated directory on the server. Users of other groups can only download the files (only if they have access to a particular file).
+-	The server has to maintain one log file for each group. After each successful user action, the server will log that action in the corresponding log file with the following details: filename, username (the user who took this action), action (upload/ download/ delete/ share), IP address (of the user machine), date and time.
+-	If a new user signs up, he gets to see a list of all groups and gets to join any group (note: all are public groups).
 
 
 User Actions:
@@ -64,12 +60,4 @@ VII.	Show log: User should send proper “cat” command to the server via the c
 
 Additional marks for any additional features/enhancements over the assigned features. Feel free to have a different design for the application, as long as the required functionalities serve.
 
-Rough View of User-Actions
 
-||||||| merged common ancestors
-# Networkng Assignments
-=======
-# Networkng Assignment
-
-
->>>>>>> e08cecc0fa20c9439373795ee157b8d63a4f9a88
