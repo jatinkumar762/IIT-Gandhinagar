@@ -4,13 +4,9 @@
 Assignment: 
 An Advanced Group Messaging Application [Deadline: 31st Oct, 2019]
 
-
-
 Resources:
-●	http://tools.ietf.org/html/rfc959
-●	https://www.geeksforgeeks.org/socket-programming-cc/
-
-
+-	http://tools.ietf.org/html/rfc959
+-	https://www.geeksforgeeks.org/socket-programming-cc/
 
 Description:
 Implement an advanced group messaging application (for ex: Slack, Trello). 
@@ -22,13 +18,7 @@ The list of features:
 -	File sharing features with other groups (can be done only if the user is common to both the groups)
 -	Each client user can log in to the server with valid credentials and can upload/ download/ delete any number of files he/she wishes to.
 
-
-
-
-
- 
 Implementation details:
-
 
 The Server:
 -	The server will listen to two different ports: one for control messages and the other for data messages.
